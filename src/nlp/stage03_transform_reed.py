@@ -97,8 +97,7 @@ import pandas as pd
 
 
 def run_transform(
-    soup: BeautifulSoup,
-    LOG: logging.Logger,
+    soup: BeautifulSoup, LOG: logging.Logger, PAGE_URL: str
 ) -> pd.DataFrame:
     """Transform HTML into a structured DataFrame.
 
@@ -272,7 +271,19 @@ def run_transform(
     LOG.info(f"Calculated author count: {author_count}")
 
     LOG.info("========================")
-    LOG.info("STAGE 03f: Build record and create DataFrame")
+    LOG.info("STAGE 03f: Extract pdf_link from Access Paper section")
+    LOG.info("========================")
+
+    pdf_link: Tag | None = soup.find("a", class_="abs-button download-pdf")
+    pdf_link_str: str | None = str(pdf_link.get("href")) if pdf_link else "unknown"
+    pdf_link_str_full: str | None = (
+        "https://arxiv.org" + pdf_link_str if pdf_link_str else "unknown"
+    )
+    LOG.info(f"PDF path: {pdf_link_str}")
+    LOG.info(f"Full pdf_link: {pdf_link_str_full}")
+
+    LOG.info("========================")
+    LOG.info("STAGE 03g: Build record and create DataFrame")
     LOG.info("========================")
 
     record = {
@@ -281,6 +292,7 @@ def run_transform(
         "authors": authors,
         "subjects": subjects,
         "submitted": date_submitted_str,
+        "pdf_link": pdf_link_str_full,
         "abstract": abstract,
         "abstract_word_count": abstract_word_count,
         "author_count": author_count,

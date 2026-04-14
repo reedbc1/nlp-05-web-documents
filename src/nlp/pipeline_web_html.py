@@ -98,10 +98,7 @@ def main() -> None:
     )
 
     # TRANSFORM
-    df = run_transform(
-        soup=validated_soup,
-        LOG=LOG,
-    )
+    df = run_transform(soup=validated_soup, LOG=LOG, PAGE_URL=PAGE_URL)
 
     # LOAD
     run_load(
