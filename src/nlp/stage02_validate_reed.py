@@ -87,12 +87,14 @@ def run_validate(
     abstract = soup.find("blockquote", class_="abstract")
     subjects = soup.find("div", class_="subheader")
     dateline = soup.find("div", class_="dateline")
+    pdf_link = soup.find("a", class_="abs-button download-pdf")
 
     LOG.info("VALIDATE: Title found: %s", title is not None)
     LOG.info("VALIDATE: Authors found: %s", authors is not None)
     LOG.info("VALIDATE: Abstract found: %s", abstract is not None)
     LOG.info("VALIDATE: Subjects found: %s", subjects is not None)
     LOG.info("VALIDATE: Dateline found: %s", dateline is not None)
+    LOG.info("VALIDATE: PDF link found: %s", pdf_link is not None)
 
     missing = []
     if not title:
@@ -105,6 +107,8 @@ def run_validate(
         missing.append("subjects")
     if not dateline:
         missing.append("dateline")
+    if not pdf_link:
+        missing.append("pdf_link")
 
     if missing:
         raise ValueError(
